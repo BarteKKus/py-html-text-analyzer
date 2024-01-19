@@ -25,8 +25,8 @@ if __name__ == "__main__":
     urls=[
     'http://www.example.com/',
     'https://www.iana.org/help/example-domains',
-    # 'https://www.onet.pl',
-    # 'https://www.wp.pl'
+    'https://www.onet.pl',
+    'https://www.wp.pl',
     'https://once.com/',
     ]
 

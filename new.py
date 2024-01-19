@@ -33,18 +33,10 @@ def count_visible_words(html):
     # Extract visible text
     visible_text = ' '.join(soup.stripped_strings)
 
-    # Remove newline characters
-    visible_text = visible_text.replace('\n', ' ')
-
-    visible_text = visible_text.replace('.',' ')
-
-    # Remove extra whitespaces
-    visible_text = re.sub(r'\s+', ' ', visible_text).strip()
-    # print(visible_text)
     # Count words
     words = re.findall(r'\b\w+\b', visible_text)
-    for i,w in enumerate(words):
-        print(f"index: {i}, word: {w}")
+    # for i,w in enumerate(words):
+        # print(f"index: {i}, word: {w}")
     word_count = len(words)
 
     return word_count
@@ -54,8 +46,8 @@ if __name__ == "__main__":
     urls=[
     'http://www.example.com/',
     'https://www.iana.org/help/example-domains',
-    # 'https://www.onet.pl',
-    # 'https://www.wp.pl'
+    'https://www.onet.pl',
+    'https://www.wp.pl',
     'https://once.com/',
     ]
     loop = asyncio.get_event_loop()
