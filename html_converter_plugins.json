@@ -48,6 +48,11 @@
                     "find":"\\s+",
                     "replace_to":" ",
                     "info":"remove extra whitespaces"
+                },
+                {
+                    "find":"&\\w+;(?!<\\/\\w+>)",
+                    "replace_to":" ",
+                    "info":"remove entities"
                 }
             ]
         },
