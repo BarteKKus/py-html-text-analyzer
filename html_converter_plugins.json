@@ -7,52 +7,62 @@
                 {
                     "find":"<script\\b[^<]*(?:(?!<\\/script>)<[^<]*)*<\\/script>",
                     "replace_to":"",
-                    "info":"remove script tags from html"
+                    "info":"remove script tags from html",
+                    "active":true
                 },
                 {
                     "find":"<style\\b[^<]*(?:(?!<\\/style>)<[^<]*)*<\\/style>",
                     "replace_to":"",
-                    "info":"remove style tags from html"
+                    "info":"remove style tags from html",
+                    "active":true
                 },
                 {
                     "find":"<iframe\\b[^<]*(?:(?!<\\/iframe>)<[^<]*)*<\\/iframe>",
                     "replace_to":"",
-                    "info":"remove iframe tags from html"
+                    "info":"remove iframe tags from html",
+                    "active":true
                 },
                 {
                     "find":"<iscript\\b[^<]*(?:(?!<\\/iscript>)<[^<]*)*<\\/iscript>",
                     "replace_to":"",
-                    "info":"remove iscript tags from html"
+                    "info":"remove iscript tags from html",
+                    "active":true
                 },
                 {
                     "find":"<!--.*?-->",
                     "replace_to":"",
-                    "info":"remove comments from html"
+                    "info":"remove comments from html",
+                    "active":true
                 },
                 {
                     "find":"</([^<>]+)>",
                     "replace_to":" ",
-                    "info":"replace any tag interials with space from right side"
+                    "info":"replace any tag interials with space from right side",
+                    "active":true
                 },
                 {
                     "find":"<([^<>]+)>",
                     "replace_to":" ",
-                    "info":"replace any tag interials with space from left side"
+                    "info":"replace any tag interials with space from left side",
+                    "active":true
                 },
                 {
                     "find":"<.*?>",
                     "replace_to":"",
-                    "info":"remove other html tags"
+                    "info":"remove other html tags",
+                    "active":true
                 },
                 {
                     "find":"\\s+",
                     "replace_to":" ",
-                    "info":"remove extra whitespaces"
+                    "info":"remove extra whitespaces",
+                    "active":true
                 },
                 {
                     "find":"&\\w+;(?!<\\/\\w+>)",
                     "replace_to":" ",
-                    "info":"remove entities"
+                    "info":"remove entities",
+                    "active":true
                 }
             ]
         },
@@ -63,42 +73,50 @@
                 {
                     "find":"\\\\n",
                     "replace_to":" ",
-                    "info":"replace newline chars to empty spaces"
+                    "info":"replace newline chars to empty spaces",
+                    "active":true
                 },
                 {
                     "find":"\\n",
                     "replace_to":" ",
-                    "info":"replace newline chars to empty spaces"
+                    "info":"replace newline chars to empty spaces",
+                    "active":true
                 },
                 {
                     "find":".",
                     "replace_to":" ",
-                    "info":"replace dots to spaces"
+                    "info":"replace dots to spaces",
+                    "active":true
                 },
                 {
                     "find":"\\\\t",
                     "replace_to":"",
-                    "info":"remove \\\\t strings"
+                    "info":"remove \\\\t strings",
+                    "active":true
                 },
                 {
                     "find":"nbsp",
                     "replace_to":"",
-                    "info":"remove Non-breaking space strings"
+                    "info":"remove Non-breaking space strings",
+                    "active":true
                 },
                 {
                     "find":"rarr",
                     "replace_to":"",
-                    "info":"remove right arrow strings"
+                    "info":"remove right arrow strings",
+                    "active":true
                 },
                 {
                     "find":"mdash",
                     "replace_to":"",
-                    "info":"remove mdash strings"
+                    "info":"remove mdash strings",
+                    "active":true
                 },
                 {
                     "find":"ndash",
                     "replace_to":"",
-                    "info":"remove ndash strings"
+                    "info":"remove ndash strings",
+                    "active":true
                 }
             ]
         }

@@ -16,8 +16,12 @@ def load_plugin(
         configuration_to_inject: Optional[Any] = None
     ) -> None:
     """Performs complete plugin import with initialization."""
-    imported_plugin = import_plugin_module(plugin_to_load)
+    imported_plugin = import_plugin_module(
+        plugin_to_load
+    )
     initialized_plugin = imported_plugin.initialize()
+
     if configuration_to_inject:
         initialized_plugin.set_instructions(configuration_to_inject)
+        
     loaded_plugins_container.append(initialized_plugin)
