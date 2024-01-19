@@ -1,0 +1,101 @@
+{
+    "conversion_steps":{
+        "regex_replace": {
+            "plugin":"text_conversion_plugins.simple_regex_replacer",
+            "configuration_type":"replacement",
+            "configuration": [
+                {
+                    "find":"<script\\b[^<]*(?:(?!<\\/script>)<[^<]*)*<\\/script>",
+                    "replace_to":"",
+                    "info":"remove script tags from html"
+                },
+                {
+                    "find":"<style\\b[^<]*(?:(?!<\\/style>)<[^<]*)*<\\/style>",
+                    "replace_to":"",
+                    "info":"remove style tags from html"
+                },
+                {
+                    "find":"<iframe\\b[^<]*(?:(?!<\\/iframe>)<[^<]*)*<\\/iframe>",
+                    "replace_to":"",
+                    "info":"remove iframe tags from html"
+                },
+                {
+                    "find":"<iscript\\b[^<]*(?:(?!<\\/iscript>)<[^<]*)*<\\/iscript>",
+                    "replace_to":"",
+                    "info":"remove iscript tags from html"
+                },
+                {
+                    "find":"<!--.*?-->",
+                    "replace_to":"",
+                    "info":"remove comments from html"
+                },
+                {
+                    "find":"</([^<>]+)>",
+                    "replace_to":" ",
+                    "info":"replace any tag interials with space from right side"
+                },
+                {
+                    "find":"<([^<>]+)>",
+                    "replace_to":" ",
+                    "info":"replace any tag interials with space from left side"
+                },
+                {
+                    "find":"<.*?>",
+                    "replace_to":"",
+                    "info":"remove other html tags"
+                },
+                {
+                    "find":"\\s+",
+                    "replace_to":" ",
+                    "info":"remove extra whitespaces"
+                }
+            ]
+        },
+        "simple_text_replace":{
+            "plugin":"text_conversion_plugins.simple_string_replacer",
+            "configuration_type":"replacement",
+            "configuration":[
+                {
+                    "find":"\\\\n",
+                    "replace_to":" ",
+                    "info":"replace newline chars to empty spaces"
+                },
+                {
+                    "find":"\\n",
+                    "replace_to":" ",
+                    "info":"replace newline chars to empty spaces"
+                },
+                {
+                    "find":".",
+                    "replace_to":" ",
+                    "info":"replace dots to spaces"
+                },
+                {
+                    "find":"\\\\t",
+                    "replace_to":"",
+                    "info":"remove \\\\t strings"
+                },
+                {
+                    "find":"nbsp",
+                    "replace_to":"",
+                    "info":"remove Non-breaking space strings"
+                },
+                {
+                    "find":"rarr",
+                    "replace_to":"",
+                    "info":"remove right arrow strings"
+                },
+                {
+                    "find":"mdash",
+                    "replace_to":"",
+                    "info":"remove mdash strings"
+                },
+                {
+                    "find":"ndash",
+                    "replace_to":"",
+                    "info":"remove ndash strings"
+                }
+            ]
+        }
+    }
+}
