@@ -1,15 +1,14 @@
 from dataclasses import dataclass
-from typing import List, Dict, Any
+from typing import List, Dict, Callable
 from pathlib import Path
-import json
 
 from text_conversion_plugins.data_structures import CONFIGURATION_TYPES
 from text_conversion_plugins.interfaces import PluginConfigurationInstruction
-
-# JSON_KEYS_MAP contains mapping between in-code references
+from configuration.json_file_loader import load_json_file
+# _JSON_KEYS_MAP contains mapping between in-code references
 # and json file keys naming
 #
-JSON_KEYS_MAP = {
+_JSON_KEYS_MAP = {
     'steps': 'conversion_steps',
     'plugin': 'plugin',
     'cfg_type': 'configuration_type',
@@ -27,36 +26,30 @@ class PluginConfiguration:
     configuration_data: List[Dict]
 
 
-def load_configuration(filepath: Path) -> List[PluginConfiguration]:
-    """Load json file with conversion steps and plugins configuration
+def load_plugin_configuration(
+        filepath: Path,
+        loader: Callable[[Path], Dict] = load_json_file) -> List[PluginConfiguration]:
+    """Load file with conversion steps and plugins configuration
 
     Args:
         filepath (Path): path with filename to load
-
-    Raises:
-        FileNotFoundError: if file was not found
-        ValueError: on any decoding errors
+        loader (Callable[[Path], Dict], optional): file loader. 
+            Defaults to load_json_file.
 
     Returns:
-        List[PluginConfiguration]: list with all plugins with configuration
+        List[PluginConfiguration]: list of plugins with theirs configuration
     """
-    try:
-        with filepath.open() as file:
-            loaded_configuration = json.load(file)
-    except FileNotFoundError:
-        raise FileNotFoundError(f"The file '{filepath}' does not exist.")
-    except json.JSONDecodeError as e:
-        raise ValueError(f"Error decoding JSON file '{filepath}': {e}")
+    loaded_configuration = loader(filepath=filepath)
 
     return [create_plugin_configuration(plugin_name, plugin)
             for plugin_name, plugin in loaded_configuration[
-                JSON_KEYS_MAP['steps']].items()]
+                _JSON_KEYS_MAP['steps']].items()]
 
 
 def create_plugin_configuration(
     name: str,
     plugin: Dict,
-    cfg_key_map: Dict[str, str] = JSON_KEYS_MAP,
+    cfg_key_map: Dict[str, str] = _JSON_KEYS_MAP,
     cfg_types: Dict[str, PluginConfigurationInstruction] = CONFIGURATION_TYPES
 ) -> PluginConfiguration:
     """Handles configuration assembly process for particular plugin.
@@ -65,7 +58,7 @@ def create_plugin_configuration(
         name (str): plugin name (this is not script name that implements plugin!)
         plugin (Dict): plugin script name
         cfg_key_map (Dict[str, str], optional):keys map between code and json. 
-            Defaults to JSON_KEYS_MAP.
+            Defaults to _JSON_KEYS_MAP.
         cfg_types (Dict[str, PluginConfigurationInstruction], optional): 
             known/registered types of configuration. Defaults to CONFIGURATION_TYPES.
 
@@ -93,7 +86,7 @@ def create_plugin_configuration(
 def prepare_configuration(
     config_elements: List[Dict],
     cfg_type: PluginConfigurationInstruction,
-    cfg_key_map: Dict[str, str] = JSON_KEYS_MAP
+    cfg_key_map: Dict[str, str] = _JSON_KEYS_MAP
 ) -> List[PluginConfigurationInstruction]:
     """Prepares configuration part for specific plugin if
     marked as 'active'.
@@ -102,7 +95,7 @@ def prepare_configuration(
         config_elements (List[Dict]): container with all configuration elements
         cfg_type (PluginConfigurationInstruction): selected configuration type
         cfg_key_map (Dict[str, str], optional): keys map between code and json.
-            Defaults to JSON_KEYS_MAP.
+            Defaults to _JSON_KEYS_MAP.
 
     Returns:
         List[PluginConfigurationInstruction]: 

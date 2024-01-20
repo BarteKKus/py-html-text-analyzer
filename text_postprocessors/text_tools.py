@@ -1,5 +1,6 @@
 import re
 from collections import Counter, defaultdict
+from pathlib import Path
 from typing import List, Dict, Optional
 
 
@@ -119,7 +120,7 @@ class WordInterpreters:
     @staticmethod
     def save_word_occurrences_to_txt_file(
         words: Dict[int, str],
-        filename: str,
+        filename: Path,
         prefix_info: Optional[str] = None,
     ) -> None:
         """Saves words occurence in text to txt file.
@@ -146,6 +147,7 @@ class WordInterpreters:
         header = f"Word: {'':<{len(longest_word)-6}} | Occurrences: \n"
 
         header_to_data_separator = f"{'-' * (len(header)-2)}\n"
+
         with open(filename, 'w') as file:
             if prefix_info:
                 file.write(prefix_info+"\n\n")
