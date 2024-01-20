@@ -2,7 +2,11 @@ import aiohttp
 import asyncio
 from typing import List
 
-async def fetch_url(session: aiohttp.ClientSession, url: str, timeout: int = 10) -> str:
+
+async def fetch_url(
+        session: aiohttp.ClientSession,
+        url: str,
+        timeout: int = 10) -> str:
     """
     Fetches the content of a given URL using aiohttp lib.
 
@@ -21,7 +25,10 @@ async def fetch_url(session: aiohttp.ClientSession, url: str, timeout: int = 10)
         print(f"Error fetching URL {url}: {e}")
         return ""
 
-async def process_urls(urls: List[str], timeout: int = 10) -> List[str]:
+
+async def process_urls(
+        urls: List[str],
+        timeout: int = 10) -> List[str]:
     """
     Processes a list of URLs concurrently using aiohttp.
 

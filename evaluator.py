@@ -36,7 +36,7 @@ def count_visible_words(html):
     # Count words
     words = re.findall(r'\b\w+\b', visible_text)
     # for i,w in enumerate(words):
-        # print(f"index: {i}, word: {w}")
+    #     print(f"index: {i}, word: {w}")
     word_count = len(words)
 
     return word_count
