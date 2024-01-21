@@ -30,11 +30,10 @@ class ArgumentParserOutput(BaseModel):
     urls_cfg_file: Path
     text_conversion_plugins_cfg_file: Path
     scenario: str
-    available_scenarios: Dict[str, AnalyzeScenario] = {}
 
     @validator('scenario')
     def validate_scenario(cls, value):
-        valid_scenarios = cls.available_scenarios.keys()
+        valid_scenarios = AVAILABLE_ANALYZE_SCENARIOS.keys()
         if value not in valid_scenarios:
             raise ValueError(
                 f"Invalid scenario: {value}. "
@@ -81,6 +80,5 @@ def setup_argument_parser() -> ArgumentParserOutput:
         text_conversion_plugins_cfg_file=(
             parsed_args.text_conversion_plugins_cfg_file
         ),
-        scenario=parsed_args.scenario,
-        available_scenarios=AVAILABLE_ANALYZE_SCENARIOS
+        scenario=parsed_args.scenario
     )
