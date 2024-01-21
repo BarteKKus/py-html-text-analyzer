@@ -1,0 +1,16 @@
+{
+    "urls": [
+        {
+            "id": "example_com",
+            "url": "http://www.example.com/"
+        },
+        {
+            "id": "iana_org",
+            "url": "https://www.iana.org/help/example-domains"
+        },
+        {
+            "id": "once_com",
+            "url": "https://once.com/"
+        }
+    ]
+}
