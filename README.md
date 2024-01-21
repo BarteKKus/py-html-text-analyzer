@@ -1,3 +1,5 @@
-# py-http-text-analyzer
+# py-html-text-analyzer
 
-#TODO description when this effort will be worth it...
+Code allows to perform different operations on html-formatted text.
+
+For current moment - only counting human-visible words is implemented.
