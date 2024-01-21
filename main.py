@@ -1,6 +1,6 @@
 import argparse
 from pathlib import Path
-from typing import Dict, Type
+from typing import Dict
 
 from configuration.plugins_cfg_json_loader import load_plugin_configuration
 from configuration.urls_cfg_json_loader import load_urls_configuration
