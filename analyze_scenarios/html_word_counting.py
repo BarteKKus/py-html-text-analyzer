@@ -31,8 +31,8 @@ class HtmlWordCountingScenario(AnalyzeScenario):
         # Url names are used for file creation in case of
         # multiple url provided
         #
-        urls, url_names = zip(*[(config.url, config.name)
-                                for config in self.urls_cfg])
+        urls, url_ids = zip(*[(config.url, config.id)
+                              for config in self.urls_cfg])
 
         # Initialize empty text conversion plugins container
         #
@@ -55,7 +55,7 @@ class HtmlWordCountingScenario(AnalyzeScenario):
 
         # TODO - perhaps it is worth to run plugins and other in async ways?
         #
-        for url, id, content in zip(urls, url_names, results):
+        for url, id, content in zip(urls, url_ids, results):
             for modificator in plugins_container:
                 content = modificator.convert(str(content))
             counted_words = simple_words_counter(text=content)
