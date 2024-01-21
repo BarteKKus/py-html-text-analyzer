@@ -1,11 +1,12 @@
 import argparse
+from pydantic import BaseModel, validator
+from pathlib import Path
+from typing import Dict
+
 from analyze_scenarios import (
     HtmlWordCountingScenario,
     AnalyzeScenario
 )
-from pydantic import BaseModel, validator
-from pathlib import Path
-from typing import Dict
 
 # Add here any new analyze scenario
 # or disable existing

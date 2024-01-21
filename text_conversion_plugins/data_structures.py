@@ -13,17 +13,10 @@ class ReplacementInstruction(PluginConfigurationInstruction):
 
     @classmethod
     def init_from_dict(cls, cfg_dict: Dict) -> Type['ReplacementInstruction']:
-        """Initializes dataclass using configuration dictionary fragment"""
+        """Allows to initialize dataclass using configuration dictionary fragment"""
         return cls(
             find=cfg_dict['find'],
             replace_to=cfg_dict['replace_to'],
             info=cfg_dict.get('info', None),
             active=cfg_dict.get('active', True)
         )
-
-
-# Add/register here new configuration types for new plugin types
-#
-CONFIGURATION_TYPES = {
-    "replacement": ReplacementInstruction,
-}
