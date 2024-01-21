@@ -62,16 +62,20 @@ def create_plugin_configuration(
     Returns:
         PluginConfiguration: initialized single plugin configuration.
     """
+    try:
+        source = plugin.get(json_keys['plugin'])
 
-    source = plugin.get(json_keys['plugin'])
+        configuration_type = cfg_types.get(plugin.get(json_keys['cfg_type']))
 
-    configuration_type = cfg_types.get(plugin.get(json_keys['cfg_type']))
-
-    active_configurations = prepare_configuration(
-        plugin.get(json_keys['cfg']),
-        configuration_type,
-        json_keys
-    )
+        active_configurations = prepare_configuration(
+            plugin.get(json_keys['cfg']),
+            configuration_type,
+            json_keys
+        )
+    except (AttributeError, TypeError):
+        raise RuntimeError(
+            f"Failed to configure plugin {source} - check configuration!"
+        )
     return PluginConfiguration(
         source=source,
         configuration_type=configuration_type,

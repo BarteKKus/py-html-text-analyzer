@@ -1,0 +1,40 @@
+{
+    "conversion_steps": {
+        "regex_replace": {
+            "plugin": "text_conversion_plugins.simple_regex_replacer",
+            "configuration_type_wrong": "replacement",
+            "configuration": [
+                {
+                    "find": "\\s+",
+                    "replace_to": " ",
+                    "info": "remove extra whitespaces",
+                    "active": true
+                },
+                {
+                    "find": "&\\w+;(?!<\\/\\w+>)",
+                    "replace_to": " ",
+                    "info": "remove entities",
+                    "active": true
+                }
+            ]
+        },
+        "simple_text_replace": {
+            "plugin": "text_conversion_plugins.simple_string_replacer",
+            "configuration_type": "replacement",
+            "configuration": [
+                {
+                    "find": ".",
+                    "replace_to": " ",
+                    "info": "replace dots to spaces",
+                    "active": true
+                },
+                {
+                    "find": "\\\\t",
+                    "replace_to": "",
+                    "info": "remove \\\\t strings",
+                    "active": true
+                }
+            ]
+        }
+    }
+}
