@@ -1,19 +1,12 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 from pathlib import Path
-from typing import List, Callable, Dict
+from typing import List, Dict, Callable
 from configuration.json_file_loader import load_json_file
 
-_JSON_KEYS_MAP = {
-    'urls': 'urls',
-    "name": "id",
-    "link": "url"
-}
 
-
-@dataclass
-class UrlConfiguration:
+class UrlConfiguration(BaseModel):
     """Represents single url config"""
-    name: str
+    id: str
     url: str
 
 
@@ -24,20 +17,19 @@ def load_urls_configuration(
     """Load file with url(s) to retrieve with theirs identifiers
 
     Args:
-        filepath (Path): path with filename to load
-        loader (Callable[[Path], Dict], optional): file loader. 
+        filepath (FilePath): path with filename to load
+        loader (Callable[[FilePath], Dict], optional): file loader. 
             Defaults to load_json_file.
 
     Returns:
         List[UrlConfiguration]: list with all urls with theirs names
     """
     loaded_configuration = loader(filepath=filepath)
-    urls = loaded_configuration[_JSON_KEYS_MAP["urls"]]
 
-    return [
-        UrlConfiguration(
-            name=url[_JSON_KEYS_MAP["name"]],
-            url=url[_JSON_KEYS_MAP["link"]]
-        )
-        for url in urls
-    ]
+    urls_data = loaded_configuration.get('urls', [])
+
+    if not isinstance(urls_data, list):
+        raise ValueError("Urls data is not in the expected format!")
+
+    url_list = [UrlConfiguration(**url) for url in urls_data]
+    return url_list

@@ -27,12 +27,12 @@ class HtmlWordCountingScenario(AnalyzeScenario):
         self.plugins_cfg = plugins_cfg
 
     def execute(self):
-        # Extract urls and url_names (ids) from config.
+        # Extract urls and url_ids from config.
         # Url names are used for file creation in case of
         # multiple url provided
         #
-        urls, url_names = zip(*[(config.url, config.name)
-                                for config in self.urls_cfg])
+        urls, url_ids = zip(*[(config.url, config.id)
+                              for config in self.urls_cfg])
 
         # Initialize empty text conversion plugins container
         #
@@ -53,12 +53,13 @@ class HtmlWordCountingScenario(AnalyzeScenario):
         #
         results = loop.run_until_complete(process_urls(urls))
 
-        # TODO - perhaps it is worth to run plugins and other in async ways?
-        #
-        for url, id, content in zip(urls, url_names, results):
+        for url, id, content in zip(urls, url_ids, results):
+
             for modificator in plugins_container:
                 content = modificator.convert(str(content))
+
             counted_words = simple_words_counter(text=content)
+
             words_selection = WordInterpreters.select_specific_words(
                 word_occurrences=counted_words,
                 count=10,
