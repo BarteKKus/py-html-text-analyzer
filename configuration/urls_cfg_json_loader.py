@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 from pathlib import Path
 from typing import List, Dict, Callable
 from configuration.json_file_loader import load_json_file
@@ -26,10 +26,15 @@ def load_urls_configuration(
     """
     loaded_configuration = loader(filepath=filepath)
 
-    urls_data = loaded_configuration.get('urls', [])
+    if 'urls' not in loaded_configuration:
+        raise RuntimeError("'urls' key is not present in configuration file!")
 
-    if not isinstance(urls_data, list):
-        raise ValueError("Urls data is not in the expected format!")
-
-    url_list = [UrlConfiguration(**url) for url in urls_data]
+    urls_data = loaded_configuration.get('urls')
+    try:
+        url_list = [UrlConfiguration(**url) for url in urls_data]
+    except (ValidationError, TypeError):
+        raise RuntimeError(
+            f"Cannot create configuration element for {filepath}! "
+            "Check configuration file keys corectness with overall strucutre!"
+        )
     return url_list

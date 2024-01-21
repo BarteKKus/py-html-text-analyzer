@@ -1,9 +1,41 @@
 from dataclasses import dataclass, field
-from typing import List
+from pathlib import Path
+from typing import List, Protocol
+
+
+class FilesDescriptor(Protocol):
+
+    @property
+    def get_files_directory(self) -> Path:
+        ...
 
 
 @dataclass
-class JSONPluginFilesDescriptor:
+class JSONUrlFilesDescriptor(FilesDescriptor):
+    """Contains description of url configuration json files"""
+    correct: List[str] = field(
+        default_factory=lambda: ['correct.json']
+    )
+    incorrect_data: List[str] = field(
+        default_factory=lambda: ['invalid_url.json']
+    )
+    unexpected_key_name: List[str] = field(
+        default_factory=lambda: [
+            'misspelled_inner_key.json',
+            'misspelled_key.json'
+        ]
+    )
+    incorrect_structure: List[str] = field(
+        default_factory=lambda: ['wrong_structure.json']
+    )
+
+    @property
+    def get_files_directory(self) -> Path:
+        return Path() / 'tests' / 'data' / 'json_url_files'
+
+
+@dataclass
+class JSONPluginFilesDescriptor(FilesDescriptor):
     """Contains description of plugin configuration json files"""
     correct: List[str] = field(
         default_factory=lambda: ['correct.json']
@@ -22,3 +54,7 @@ class JSONPluginFilesDescriptor:
             'not_existing_plugin.json',
         ]
     )
+
+    @property
+    def get_files_directory(self) -> Path:
+        return Path() / 'tests' / 'data' / 'json_plugins_files'

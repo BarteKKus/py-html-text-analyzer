@@ -12,8 +12,8 @@ from tests.files_descriptor import JSONPluginFilesDescriptor
 from text_conversion_plugins.data_structures import ReplacementInstruction
 from text_conversion_plugins.interfaces import PluginConfigurationInstruction
 
-JSON_FILES_DIR = Path() / 'tests' / 'data' / 'json_plugins_files'
 FILE_DESCRIPTOR = JSONPluginFilesDescriptor()
+JSON_FILES_DIR = FILE_DESCRIPTOR.get_files_directory
 
 
 @pytest.mark.parametrize(
@@ -24,7 +24,7 @@ def test_load_plugins_configuration_with_correct_cfg(
     correct_json_file: Path
 ):
     """Correct configuration should allow to create list of
-    PluginConfiguration object - that are used firther by plugin
+    PluginConfiguration object - that are used further by plugin
     loader module"""
     plugins_configurations = load_plugins_configuration(
         filepath=correct_json_file)
