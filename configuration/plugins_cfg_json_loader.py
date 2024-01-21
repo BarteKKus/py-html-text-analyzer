@@ -26,7 +26,7 @@ class PluginConfiguration:
     configuration_data: List[Dict]
 
 
-def load_plugin_configuration(
+def load_plugins_configuration(
         filepath: Path,
         loader: Callable[[Path], Dict] = load_json_file) -> List[PluginConfiguration]:
     """Load file with conversion steps and plugins configuration

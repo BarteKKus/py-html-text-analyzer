@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup
 import aiohttp
 import asyncio
 import re
+
+
 def sanitize_html(html_content):
     soup = BeautifulSoup(html_content, 'html.parser')
 
@@ -13,15 +15,18 @@ def sanitize_html(html_content):
     sanitized_text = soup.get_text(separator='\n', strip=True)
 
     return sanitized_text
+
+
 async def fetch_url(session, url):
     async with session.get(url) as response:
         return await response.text()
+
 
 async def process_urls(urls):
     async with aiohttp.ClientSession() as session:
         tasks = [fetch_url(session, url) for url in urls]
         return await asyncio.gather(*tasks)
-    
+
 
 def count_visible_words(html):
     soup = BeautifulSoup(html, 'html.parser')
@@ -41,14 +46,13 @@ def count_visible_words(html):
 
     return word_count
 
+
 if __name__ == "__main__":
     # Example HTML content
-    urls=[
-    'http://www.example.com/',
-    'https://www.iana.org/help/example-domains',
-    'https://www.onet.pl',
-    'https://www.wp.pl',
-    'https://once.com/',
+    urls = [
+        'http://www.example.com/',
+        'https://www.iana.org/help/example-domains',
+        'https://once.com/',
     ]
     loop = asyncio.get_event_loop()
     results = loop.run_until_complete(process_urls(urls))
