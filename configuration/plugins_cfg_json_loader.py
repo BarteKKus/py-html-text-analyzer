@@ -20,10 +20,9 @@ _JSON_KEYS_MAP = {
 @dataclass
 class PluginConfiguration:
     """Represents a single plugin configuration"""
-    name: str
     source: str
     configuration_type: str
-    configuration_data: List[Dict]
+    configuration_data: List[PluginConfigurationInstruction]
 
 
 def load_plugins_configuration(
@@ -41,13 +40,12 @@ def load_plugins_configuration(
     """
     loaded_configuration = loader(filepath=filepath)
 
-    return [create_plugin_configuration(plugin_name, plugin)
-            for plugin_name, plugin in loaded_configuration[
+    return [create_plugin_configuration(plugin)
+            for _, plugin in loaded_configuration[
                 _JSON_KEYS_MAP['steps']].items()]
 
 
 def create_plugin_configuration(
-    name: str,
     plugin: Dict,
     cfg_key_map: Dict[str, str] = _JSON_KEYS_MAP,
     cfg_types: Dict[str, PluginConfigurationInstruction] = CONFIGURATION_TYPES
@@ -55,7 +53,6 @@ def create_plugin_configuration(
     """Handles configuration assembly process for particular plugin.
 
     Args:
-        name (str): plugin name (this is not script name that implements plugin!)
         plugin (Dict): plugin script name
         cfg_key_map (Dict[str, str], optional):keys map between code and json. 
             Defaults to _JSON_KEYS_MAP.
@@ -76,7 +73,6 @@ def create_plugin_configuration(
     )
 
     return PluginConfiguration(
-        name=name,
         source=source,
         configuration_type=configuration_type,
         configuration_data=active_configurations
