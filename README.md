@@ -1,1 +1,3 @@
 # py-http-text-analyzer
+
+#TODO description when this effort will be worth it...
