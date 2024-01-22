@@ -40,7 +40,7 @@ class WordCounters:
         return dict(Counter(data_to_count))
 
     @staticmethod
-    def plain_words_counter(data_to_count: str) -> Dict[int, str]:
+    def plain_words_counter(data_to_count: List[str]) -> Dict[int, str]:
         word_counts = defaultdict(int)
         for word in data_to_count:
             word_counts[word] += 1
