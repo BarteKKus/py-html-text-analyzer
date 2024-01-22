@@ -1,19 +1,18 @@
 import pytest
 from pathlib import Path
 from configuration.plugins_cfg_json_loader import (
-    JsonKeysMap,
-    PluginConfiguration,
     load_plugins_configuration,
-    create_plugin_configuration,
-    prepare_configuration
 )
-from configuration.json_file_loader import load_json_file
+from configuration.data_structures import ConversionStep, SinglePluginData
 from tests.files_descriptor import JSONPluginFilesDescriptor
+from text_conversion_plugins.plugin_configuration_types import (
+    CONFIGURATION_TYPES
+)
 from text_conversion_plugins.data_structures import ReplacementInstruction
-from text_conversion_plugins.interfaces import PluginConfigurationInstruction
 
-JSON_FILES_DIR = Path() / 'tests' / 'data' / 'json_plugins_files'
+
 FILE_DESCRIPTOR = JSONPluginFilesDescriptor()
+JSON_FILES_DIR = FILE_DESCRIPTOR.get_files_directory
 
 
 @pytest.mark.parametrize(
@@ -24,12 +23,33 @@ def test_load_plugins_configuration_with_correct_cfg(
     correct_json_file: Path
 ):
     """Correct configuration should allow to create list of
-    PluginConfiguration object - that are used firther by plugin
+    ConversionStep(s) - that are used further by plugin
     loader module"""
     plugins_configurations = load_plugins_configuration(
-        filepath=correct_json_file)
+        file_path=correct_json_file,
+        configuration_types=CONFIGURATION_TYPES
+    )
     assert all(
-        isinstance(plugin, PluginConfiguration)
+        isinstance(plugin, ConversionStep)
+        for plugin in plugins_configurations)
+
+
+@pytest.mark.parametrize(
+    "non_existent_plugin",
+    [JSON_FILES_DIR / f for f in FILE_DESCRIPTOR.non_existent_resource]
+)
+def test_load_plugins_configuration_with_correct_cfg(
+    non_existent_plugin: Path
+):
+    """If for example plugin source do not exists - loader should stil
+    return ConversionSteps as it is not responsible for checking if
+    plugin exists at all"""
+    plugins_configurations = load_plugins_configuration(
+        file_path=non_existent_plugin,
+        configuration_types=CONFIGURATION_TYPES
+    )
+    assert all(
+        isinstance(plugin, ConversionStep)
         for plugin in plugins_configurations)
 
 
@@ -40,49 +60,51 @@ def test_load_plugins_configuration_with_correct_cfg(
 def test_load_plugins_configuration_with_unknow_cfg_keys(
         unexpected_key_name_json_file: Path
 ):
-    """Unexpected of misspelled key names in cfg should raise RuntimeError
-    as module cannot continue working in correct/expected way"""
-    with pytest.raises(RuntimeError):
+    """Unexpected of misspelled key names in cfg should raise ValueError
+    as module cannot load data in correct/expected way"""
+    with pytest.raises(ValueError):
         load_plugins_configuration(
-            filepath=unexpected_key_name_json_file)
+            file_path=unexpected_key_name_json_file,
+            configuration_types=CONFIGURATION_TYPES
+        )
 
 
 @pytest.mark.parametrize(
-    "correct_json_file",
-    [JSON_FILES_DIR / FILE_DESCRIPTOR.correct[0]]
+    "detailed_evaluation_json_file",
+    [JSON_FILES_DIR / f for f in FILE_DESCRIPTOR.detailed_evaluation]
 )
-def test_create_plugin_configuration(correct_json_file):
-    """Correct input data should generate PluginConfiguration object
-    with expected data"""
-    data = load_json_file(correct_json_file)
-    plugin_data = data['conversion_steps']['regex_replace']
-    json_keys = JsonKeysMap().model_dump()
-    cfg_types = {'replacement': ReplacementInstruction}
-
-    plugin_configuration = create_plugin_configuration(
-        plugin_data, json_keys, cfg_types
+def test_load_plugins_configuration_with_correct_cfg(
+    detailed_evaluation_json_file: Path
+):
+    """Checks if data from json is transformed correctly"""
+    pc = load_plugins_configuration(
+        file_path=detailed_evaluation_json_file,
+        configuration_types=CONFIGURATION_TYPES
     )
-    assert isinstance(plugin_configuration, PluginConfiguration)
-    assert plugin_configuration.source == 'text_conversion_plugins.simple_regex_replacer'
-    assert plugin_configuration.configuration_type == ReplacementInstruction
-    assert len(plugin_configuration.configuration_data) == 2
+    assert all(
+        isinstance(plugin, ConversionStep)
+        for plugin in pc)
+    assert len(pc) == 1
+    assert pc[0].step_name == "regex_replace"
+    assert isinstance(pc[0].step_instructions, SinglePluginData)
+    assert pc[0].step_instructions.plugin == "ab.cd"
+    assert pc[0].step_instructions.configuration_type == "replacement"
+    assert len(pc[0].step_instructions.configuration) == 2
+    assert all(
+        isinstance(cfg, ReplacementInstruction)
+        for cfg in pc[0].step_instructions.configuration
+    )
 
+    assert pc[0].step_instructions.configuration[0].find == '\\s+'
+    assert pc[0].step_instructions.configuration[0].replace_to == ' '
+    assert pc[0].step_instructions.configuration[0].info == (
+        "remove extra whitespaces"
+    )
+    assert pc[0].step_instructions.configuration[1].active == True
 
-@pytest.mark.parametrize(
-    "correct_json_file",
-    [JSON_FILES_DIR / FILE_DESCRIPTOR.correct[0]]
-)
-def test_prepare_configuration(correct_json_file):
-    """Correct input data should generate PluginConfigurationInstruction object
-    with expected data"""
-    data = load_json_file(correct_json_file)
-    config_elements = data['conversion_steps']['regex_replace']['configuration']
-    cfg_type = ReplacementInstruction
-    json_keys = JsonKeysMap().model_dump()
-
-    result = prepare_configuration(config_elements, cfg_type, json_keys)
-
-    assert len(result) == 2
-    for single_result in result:
-        assert isinstance(single_result, cfg_type)
-        assert isinstance(single_result, PluginConfigurationInstruction)
+    assert pc[0].step_instructions.configuration[1].find == '&\\w+;(?!<\\/\\w+>)'
+    assert pc[0].step_instructions.configuration[1].replace_to == ' '
+    assert pc[0].step_instructions.configuration[1].info == (
+        "remove entities"
+    )
+    assert pc[0].step_instructions.configuration[1].active == True

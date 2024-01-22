@@ -1,35 +1,36 @@
-from pydantic import BaseModel
+from pydantic import ValidationError
 from pathlib import Path
-from typing import List, Dict, Callable
+from typing import Dict, Callable
 from configuration.json_file_loader import load_json_file
-
-
-class UrlConfiguration(BaseModel):
-    """Represents single url config"""
-    id: str
-    url: str
+from configuration.data_structures import SingleUrlSetting, UrlsConfiguration
 
 
 def load_urls_configuration(
-        filepath: Path,
+        file_path: Path,
         loader: Callable[[Path], Dict] = load_json_file
-) -> List[UrlConfiguration]:
-    """Load file with url(s) to retrieve with theirs identifiers
+) -> UrlsConfiguration:
+    """Loads urls configuration.
 
     Args:
-        filepath (FilePath): path with filename to load
-        loader (Callable[[FilePath], Dict], optional): file loader. 
+        filepath (Path): file path to configuration file 
+            that contains plugins description
+        loader (Callable[[Path], Dict], optional): file loader.
             Defaults to load_json_file.
 
+    Raises:
+        ValueError: raised on any issue with reading configuration
+
     Returns:
-        List[UrlConfiguration]: list with all urls with theirs names
+        UrlsConfiguration: total urls pack
     """
-    loaded_configuration = loader(filepath=filepath)
-
-    urls_data = loaded_configuration.get('urls', [])
-
-    if not isinstance(urls_data, list):
-        raise ValueError("Urls data is not in the expected format!")
-
-    url_list = [UrlConfiguration(**url) for url in urls_data]
-    return url_list
+    loaded_configuration = loader(file_path=file_path)
+    try:
+        config_object = UrlsConfiguration.model_validate(
+            loaded_configuration
+        )
+    except (ValidationError, ValueError, KeyError, TypeError) as e:
+        raise ValueError(
+            f"Error while loading urls configuration for {file_path} "
+            f"as: '{repr(e)}'"
+        )
+    return config_object

@@ -4,8 +4,8 @@ from pathlib import Path
 from configuration.json_file_loader import load_json_file
 from tests.files_descriptor import JSONPluginFilesDescriptor
 
-JSON_FILES_DIR = Path() / 'tests' / 'data' / 'json_plugins_files'
 FILE_DESCRIPTOR = JSONPluginFilesDescriptor()
+JSON_FILES_DIR = FILE_DESCRIPTOR.get_files_directory
 
 
 @pytest.mark.parametrize(
