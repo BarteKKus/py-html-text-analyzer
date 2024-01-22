@@ -6,15 +6,16 @@ from configuration.plugins_cfg_json_loader import ConversionStep
 
 class AnalyzeScenario(metaclass=abc.ABCMeta):
     """Analyze scenario interface"""
+
     @abc.abstractmethod
     def __init__(
-            self,
-            urls_cfg: UrlsConfiguration,
-            plugins_cfg: List[ConversionStep]
-    ):
+        self,
+        urls_cfg: UrlsConfiguration,
+        plugins_cfg: List[ConversionStep]
+    ) -> None:
         raise NotImplementedError
 
     @abc.abstractmethod
-    def execute() -> bool:
+    def execute(self) -> bool:
         """Returns True when execution is finished"""
         raise NotImplementedError
