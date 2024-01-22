@@ -1,22 +1,15 @@
 import asyncio
-
 from pathlib import Path
 from typing import List, Callable, Optional
 
 from analyze_scenarios.interfaces import AnalyzeScenario
-
 from configuration.urls_cfg_json_loader import UrlsConfiguration
 from configuration.plugins_cfg_json_loader import ConversionStep
-
-from url_processors.async_url_processor import (
-    process_network_urls
-)
-
 from text_conversion_plugins.interfaces import TextConverterPluginInterface
 from text_conversion_plugins.plugin_loader import load_plugin
-
 from text_postprocessors.words_counter import simple_words_counter
 from text_postprocessors.text_tools import WordInterpreters
+from url_processors.async_url_processor import process_network_urls
 
 
 class HtmlWordCountingScenario(AnalyzeScenario):
@@ -67,34 +60,21 @@ class HtmlWordCountingScenario(AnalyzeScenario):
             self.file_output_directory = override_file_output_directory
 
     def execute(self) -> bool:
-        """Executes scenario"""
-        # Extract urls and url_ids from config.
-        # Url names are used for file creation in case of
-        # multiple url provided
-        #
         urls, url_ids = zip(*[(config.url, config.id)
-                              for config in self.urls_cfg])
-
-        # Initialize empty text conversion plugins container
-        #
+                            for config in self.urls_cfg])
         plugins_container: List[TextConverterPluginInterface] = []
 
-        # Load and initialize text conversion plugins
-        #
         for plugin_cfg in self.plugins_cfg:
             load_plugin(
                 plugin_to_load=plugin_cfg.step_instructions.plugin,
                 loaded_plugins_container=plugins_container,
-                configuration_to_inject=plugin_cfg.step_instructions.configuration
+                configuration_to_inject=plugin_cfg.step_instructions.configuration,
             )
 
         loop = asyncio.get_event_loop()
-        results = loop.run_until_complete(
-            self.urls_handler(urls)
-        )
+        results = loop.run_until_complete(self.urls_handler(urls))
 
         for url, url_id, text_content in zip(urls, url_ids, results):
-
             for modificator in plugins_container:
                 text_content = modificator.convert(str(text_content))
 
@@ -103,20 +83,21 @@ class HtmlWordCountingScenario(AnalyzeScenario):
             words_selection = WordInterpreters.select_specific_words(
                 word_occurrences=counted_words,
                 count=self.max_results_number,
-                descending_order=self.descending_results_order
+                descending_order=self.descending_results_order,
             )
+
             if self.enable_console_output:
                 WordInterpreters.print_word_occurences(
                     words=words_selection,
-                    prefix_info=(
-                        f"{self.console_output_header}'{url}' "
-                    )
+                    prefix_info=f"{self.console_output_header}'{url}' ",
                 )
+
             if self.enable_file_output:
                 WordInterpreters.save_word_occurrences_to_txt_file(
                     words=words_selection,
-                    filename=Path() / self.file_output_directory /
+                    filename=Path(self.file_output_directory) /
                     f"{url_id}_{self.file_name_suffix}",
-                    prefix_info=f"{self.file_header_string}'{url}' "
+                    prefix_info=f"{self.file_header_string}'{url}' ",
                 )
-            return True
+
+        return True
