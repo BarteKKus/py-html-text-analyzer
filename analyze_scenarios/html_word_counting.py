@@ -5,8 +5,8 @@ from typing import List
 
 from .interfaces import AnalyzeScenario
 
-from configuration.urls_cfg_json_loader import UrlConfiguration
-from configuration.plugins_cfg_json_loader import PluginConfiguration
+from configuration.urls_cfg_json_loader import UrlsConfiguration
+from configuration.plugins_cfg_json_loader import ConversionStep
 
 from url_processors.async_url_processor import process_urls
 
@@ -18,12 +18,14 @@ from text_postprocessors.text_tools import WordInterpreters
 
 
 class HtmlWordCountingScenario(AnalyzeScenario):
+    """Html text based word counting scenario implementation"""
+
     def __init__(
             self,
-            urls_cfg: List[UrlConfiguration],
-            plugins_cfg: List[PluginConfiguration]
+            urls_cfg: UrlsConfiguration,
+            plugins_cfg: List[ConversionStep]
     ):
-        self.urls_cfg = urls_cfg
+        self.urls_cfg = urls_cfg.urls
         self.plugins_cfg = plugins_cfg
 
     def execute(self):
@@ -42,9 +44,9 @@ class HtmlWordCountingScenario(AnalyzeScenario):
         #
         for plugin_cfg in self.plugins_cfg:
             load_plugin(
-                plugin_to_load=plugin_cfg.source,
+                plugin_to_load=plugin_cfg.step_instructions.plugin,
                 loaded_plugins_container=plugins_container,
-                configuration_to_inject=plugin_cfg.configuration_data
+                configuration_to_inject=plugin_cfg.step_instructions.configuration
             )
 
         loop = asyncio.get_event_loop()

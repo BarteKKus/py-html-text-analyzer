@@ -1,8 +1,8 @@
 {
-    "conversion_steps": {
+    "conversion_steps_WRONG": {
         "regex_replace": {
             "plugin": "text_conversion_plugins.simple_regex_replacer",
-            "configuration_type": "replacement",
+            "configuration_type_wrong": "replacement",
             "configuration": [
                 {
                     "find": "\\s+",
@@ -21,7 +21,7 @@
         "simple_text_replace": {
             "plugin": "text_conversion_plugins.simple_string_replacer",
             "configuration_type": "replacement",
-            "configuration_WRONG": [
+            "configuration": [
                 {
                     "find": ".",
                     "replace_to": " ",

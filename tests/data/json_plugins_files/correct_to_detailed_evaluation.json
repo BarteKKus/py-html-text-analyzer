@@ -1,0 +1,22 @@
+{
+    "conversion_steps": {
+        "regex_replace": {
+            "plugin": "ab.cd",
+            "configuration_type": "replacement",
+            "configuration": [
+                {
+                    "find": "\\s+",
+                    "replace_to": " ",
+                    "info": "remove extra whitespaces",
+                    "active": true
+                },
+                {
+                    "find": "&\\w+;(?!<\\/\\w+>)",
+                    "replace_to": " ",
+                    "info": "remove entities",
+                    "active": true
+                }
+            ]
+        }
+    }
+}

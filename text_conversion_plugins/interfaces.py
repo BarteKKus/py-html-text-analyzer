@@ -27,9 +27,6 @@ class HtmlPluginInterface(metaclass=abc.ABCMeta):
 
 
 class PluginConfigurationInstruction(metaclass=abc.ABCMeta):
-    """Represents a single plugin configuration object"""
-
-    @abc.abstractstaticmethod
-    def init_from_dict(cfg_dict: Dict) -> 'PluginConfigurationInstruction':
-        """Initializes instruction object from configuration dict"""
-        raise NotImplementedError
+    """Represents a single plugin configuration object.
+    This type of object should contains single config
+    structure for particular type."""

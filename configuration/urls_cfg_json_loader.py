@@ -1,40 +1,36 @@
-from pydantic import BaseModel, ValidationError
+from pydantic import ValidationError
 from pathlib import Path
-from typing import List, Dict, Callable
+from typing import Dict, Callable
 from configuration.json_file_loader import load_json_file
-
-
-class UrlConfiguration(BaseModel):
-    """Represents single url config"""
-    id: str
-    url: str
+from configuration.data_structures import SingleUrlSetting, UrlsConfiguration
 
 
 def load_urls_configuration(
-        filepath: Path,
+        file_path: Path,
         loader: Callable[[Path], Dict] = load_json_file
-) -> List[UrlConfiguration]:
-    """Load file with url(s) to retrieve with theirs identifiers
+) -> UrlsConfiguration:
+    """Loads urls configuration.
 
     Args:
-        filepath (FilePath): path with filename to load
-        loader (Callable[[FilePath], Dict], optional): file loader. 
+        filepath (Path): file path to configuration file 
+            that contains plugins description
+        loader (Callable[[Path], Dict], optional): file loader.
             Defaults to load_json_file.
 
+    Raises:
+        ValueError: raised on any issue with reading configuration
+
     Returns:
-        List[UrlConfiguration]: list with all urls with theirs names
+        UrlsConfiguration: total urls pack
     """
-    loaded_configuration = loader(filepath=filepath)
-
-    if 'urls' not in loaded_configuration:
-        raise RuntimeError("'urls' key is not present in configuration file!")
-
-    urls_data = loaded_configuration.get('urls')
+    loaded_configuration = loader(file_path=file_path)
     try:
-        url_list = [UrlConfiguration(**url) for url in urls_data]
-    except (ValidationError, TypeError):
-        raise RuntimeError(
-            f"Cannot create configuration element for {filepath}! "
-            "Check configuration file keys corectness with overall strucutre!"
+        config_object = UrlsConfiguration.model_validate(
+            loaded_configuration
         )
-    return url_list
+    except (ValidationError, ValueError, KeyError, TypeError) as e:
+        raise ValueError(
+            f"Error while loading urls configuration for {file_path} "
+            f"as: '{repr(e)}'"
+        )
+    return config_object

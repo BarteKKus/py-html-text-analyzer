@@ -28,6 +28,11 @@ class JSONUrlFilesDescriptor(FilesDescriptor):
     incorrect_structure: List[str] = field(
         default_factory=lambda: ['wrong_structure.json']
     )
+    detailed_evaluation: List[str] = field(
+        default_factory=lambda: [
+            'correct_to_detailed_evaluation.json'
+        ]
+    )
 
     @property
     def get_files_directory(self) -> Path:
@@ -47,11 +52,17 @@ class JSONPluginFilesDescriptor(FilesDescriptor):
         default_factory=lambda: [
             'misspelled_configuration_key.json',
             'misspelled_key.json',
+            'misspelled_main_key.json'
         ]
     )
     non_existent_resource: List[str] = field(
         default_factory=lambda: [
             'not_existing_plugin.json',
+        ]
+    )
+    detailed_evaluation: List[str] = field(
+        default_factory=lambda: [
+            'correct_to_detailed_evaluation.json'
         ]
     )
 

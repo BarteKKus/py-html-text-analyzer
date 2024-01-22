@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict
 
 
-def load_json_file(filepath: Path) -> Dict:
+def load_json_file(file_path: Path) -> Dict:
     """Load json file
 
     Args:
@@ -17,9 +17,9 @@ def load_json_file(filepath: Path) -> Dict:
         Dict: json file as dictionary
     """
     try:
-        with filepath.open() as file:
+        with file_path.open() as file:
             return json.load(file)
     except FileNotFoundError:
-        raise FileNotFoundError(f"The file '{filepath}' does not exist.")
+        raise FileNotFoundError(f"The file '{file_path}' does not exist.")
     except json.JSONDecodeError as e:
-        raise ValueError(f"Error decoding JSON file '{filepath}': {e}")
+        raise ValueError(f"Error decoding JSON file '{file_path}': {e}")
