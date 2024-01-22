@@ -1,9 +1,10 @@
 import aiohttp
 import asyncio
+import aiofiles
 from typing import List
 
 
-async def fetch_url(
+async def fetch_web_url(
         session: aiohttp.ClientSession,
         url: str,
         timeout: int = 10) -> str:
@@ -26,7 +27,37 @@ async def fetch_url(
         return ""
 
 
-async def process_urls(
+async def fetch_local_url(file_path: str) -> str:
+    try:
+        async with aiofiles.open(file_path, mode='r', encoding='utf-8') as file:
+            return await file.read()
+    except FileNotFoundError as e:
+        print(f"File not found: {file_path}")
+        return ""
+    except Exception as e:
+        print(f"Error reading file {file_path}: {e}")
+        return ""
+
+
+async def process_local_urls(
+        urls: List[str],
+        *args,
+        **kwargs
+) -> List[str]:
+    """
+    Processes a list of links concurrently using aiofiles.
+
+    Args:
+        urls (List[str]): List of local paths to process.
+
+    Returns:
+        List[str]: List of text contents for each locally loaded file.
+    """
+    tasks = [fetch_local_url(url) for url in urls]
+    return await asyncio.gather(*tasks)
+
+
+async def process_network_urls(
         urls: List[str],
         timeout: int = 10) -> List[str]:
     """
@@ -40,5 +71,5 @@ async def process_urls(
         List[str]: List of text contents for each URL.
     """
     async with aiohttp.ClientSession() as session:
-        tasks = [fetch_url(session, url, timeout) for url in urls]
+        tasks = [fetch_web_url(session, url, timeout) for url in urls]
         return await asyncio.gather(*tasks)
