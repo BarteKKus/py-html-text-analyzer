@@ -15,5 +15,6 @@ class AnalyzeScenario(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def execute():
+    def execute() -> bool:
+        """Returns True when execution is finished"""
         raise NotImplementedError
