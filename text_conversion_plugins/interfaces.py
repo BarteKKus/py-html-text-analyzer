@@ -1,5 +1,5 @@
 import abc
-from typing import List, Dict
+from typing import List
 
 
 class TextConverterPluginInterface(metaclass=abc.ABCMeta):

@@ -10,3 +10,5 @@ class ReplacementInstruction(PluginConfigurationInstruction):
     replace_to: str
     info: Optional[str] = field(default=None)
     active: Optional[bool] = field(default=True)
+
+# Add here new plugin instructions definition for new types

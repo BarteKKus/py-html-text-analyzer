@@ -38,6 +38,7 @@ def has_txt_files(directory_path: str) -> bool:
 
 
 def compare_files(file_path1: str, file_path2: str) -> bool:
+    """True if both are identical"""
     filecmp.clear_cache()
     return filecmp.cmp(file_path1, file_path2)
 
