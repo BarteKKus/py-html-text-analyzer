@@ -31,6 +31,12 @@ def load_file(file_path: str) -> str:
         return file.read()
 
 
+def has_txt_files(directory_path: str) -> bool:
+    path = Path(directory_path)
+    txt_files = path.glob('*.txt')
+    return any(txt_files)
+
+
 def compare_files(file_path1: str, file_path2: str) -> bool:
     filecmp.clear_cache()
     return filecmp.cmp(file_path1, file_path2)
@@ -66,7 +72,7 @@ def get_validation_file():
     return Path() / 'tests' / 'data' / 'html_text_files' / 'expected_html_word_counter_results.txt'
 
 
-def test_html_word_counting_scenario(
+def test_html_word_counting_scenario_output_file(
         get_url_cfg,
         get_plugins_cfg,
         get_files_output_directory,
@@ -74,7 +80,7 @@ def test_html_word_counting_scenario(
 ):
 
     delete_files(directory_path=get_files_output_directory)
-    assert not any(get_files_output_directory.iterdir())
+    assert not has_txt_files(get_files_output_directory)
     scenario = HtmlWordCountingScenario(
         urls_cfg=get_url_cfg,
         plugins_cfg=get_plugins_cfg,
