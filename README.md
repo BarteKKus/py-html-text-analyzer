@@ -20,14 +20,14 @@ See example: *./configuration/default/configuration_files/text_converter_plugins
 
 Short workflow description:
 1. Module requires urls and plugins configuration,
-2. Urls json config is loaded by urls loader,
+2. Urls json config are loaded by urls loader,
 3. Plugins json config is loaded by plugins loader,
 4. According to --scenario flag - specific scenario is launched,
 5. Scenario import urls and plugins cfg,
 6. Scenario launch plugins loading process with importlib when (if provided) configuration is beeing passed to selected plugins,
-7. Next scenario in async way gets html content form provided urls,
+7. Next scenario in async way gets html content form provided url(s),
 8. When content is loaded - scenario applies text conversion plugins on scraped html text,
-9. When text is processed by plugins text_postprocessors going to be used (depending on the specific plugin),
+9. When text is processed by plugins -> text_postprocessors going to be used (depending on the specific plugin),
 10. In case of html_words_counter - selection of specific words is applied,
 11. At the end word interpreters are launched - in case of html_words_counter - scenario prints results to the console and saves results to txt file,
 12. Job is done.
