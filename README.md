@@ -8,7 +8,7 @@ Project requirements:
 - pytest
 - aiofiles
 
-Module is designed to be launched form command line. To run simply type <code>python3 main.py</code> and use existing configuration or provide your own - to do this use command line arguments:
+Module is designed to be launched form command line. To run simply type <code>python3 make_analyze.py</code> and use existing configuration or provide your own - to do this use command line arguments:
 
 > --urls_cfg_file | allows to override default path and use any custom urls config file. This configuration file describes what html's (in form of http/s link or local html file) should be used for analysis.
 See example: *./configuration/default/configuration_files/urls.json*
